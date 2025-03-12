@@ -93,6 +93,11 @@ export interface AIInsight {
 
 export type SyncStatus = 'synced' | 'syncing' | 'error' | 'offline';
 
+export interface FocusModeState {
+  enabled: boolean;
+  sections: string[];
+}
+
 export interface UIState {
   // Sidebar state
   sidebarCollapsed: boolean;
@@ -112,6 +117,10 @@ export interface UIState {
   addPinnedMetric: (metricId: string) => void;
   removePinnedMetric: (metricId: string) => void;
   togglePinnedMetric: (metricId: string) => void;
+  
+  // Focus Mode
+  focusMode: FocusModeState;
+  setFocusMode: (focusMode: FocusModeState) => void;
   
   // Notifications
   notifications: Notification[];
@@ -263,6 +272,13 @@ export const useUIStore = create<UIState>()(
           ? state.pinnedMetrics.filter(id => id !== metricId) 
           : [...state.pinnedMetrics, metricId]
       })),
+      
+      // Focus Mode
+      focusMode: {
+        enabled: false,
+        sections: ['metrics', 'insights', 'activity', 'milestones', 'cofounder', 'funding']
+      },
+      setFocusMode: (focusMode) => set({ focusMode }),
       
       // Notifications
       notifications: [
@@ -484,18 +500,18 @@ export const useUIStore = create<UIState>()(
       // System status
       syncStatus: 'synced',
       setSyncStatus: (status) => set({ syncStatus: status }),
-      dataLastUpdated: Date.now() - 1000 * 60 * 30, // 30 minutes ago
-      setDataLastUpdated: (timestamp) => set({ dataLastUpdated: timestamp })
+      dataLastUpdated: Date.now() - 30 * 60 * 1000, // 30 minutes ago
+      setDataLastUpdated: (timestamp) => set({ dataLastUpdated: timestamp }),
     }),
     {
       name: 'startup-exel-ui-store',
-      // Only persist specific parts of the store to avoid bloat
       partialize: (state) => ({
         sidebarCollapsed: state.sidebarCollapsed,
         navigationCategories: state.navigationCategories,
-        recentlyViewed: state.recentlyViewed,
-        pinnedMetrics: state.pinnedMetrics
-      })
+        pinnedMetrics: state.pinnedMetrics,
+        focusMode: state.focusMode,
+        insightStates: state.insightStates,
+      }),
     }
   )
 );

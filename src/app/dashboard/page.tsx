@@ -25,12 +25,15 @@ import { MetricCard } from '@/components/ui/DataVisualizations';
 import { MilestoneTrack } from '@/components/ui/ProgressIndicator';
 import WelcomeSection from '@/components/features/WelcomeSection';
 import { useUIStore } from '@/store/uiStore';
-import BentoGrid from '@/components/layout/BentoGrid';
+import BentoGrid, { AIInsight } from '@/components/layout/BentoGrid';
 import ActivityStream from '@/components/features/ActivityStream';
 import MilestoneTracker from '@/components/features/MilestoneTracker';
 import { mockMilestones } from '@/data/mockMilestones';
 import CoFounderHub from '@/components/features/CoFounderHub';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import FocusMode from '@/components/features/FocusMode';
+import StartupHealth from '@/components/features/StartupHealth';
+import { mockHealthData } from '@/data/mockHealthData';
 import {
   AreaChart,
   Area,
@@ -127,31 +130,52 @@ const startupJourneyMilestones = [
   }
 ];
 
-// Sample actionable insights
-const actionableInsights = [
+// AI Insights for the dashboard
+const aiInsights: AIInsight[] = [
   {
     id: 'insight-1',
-    title: 'Conversion Rate Optimization',
-    description: 'Your landing page conversion rate is 15% below industry average. Consider A/B testing your call-to-action and value proposition.',
+    title: 'Revenue Growth Trend',
+    description: 'Your MRR has grown 15% faster than similar startups at this stage. Keep focusing on your current acquisition channels.',
+    type: 'trend',
     priority: 'high',
-    category: 'marketing',
-    icon: <RiBarChartBoxLine className="w-5 h-5 text-warning-500" />
+    timestamp: Date.now() - 24 * 60 * 60 * 1000, // 1 day ago
+    size: 'medium'
   },
   {
     id: 'insight-2',
-    title: 'Runway Alert',
-    description: 'At current burn rate, your startup has 8 months of runway remaining. Consider optimizing expenses or planning for fundraising.',
-    priority: 'critical',
-    category: 'finance',
-    icon: <RiAlertLine className="w-5 h-5 text-error-500" />
+    title: 'Burn Rate Alert',
+    description: 'Your current burn rate has increased by 12% this month. Consider reviewing recent expenses to identify areas for optimization.',
+    type: 'anomaly',
+    priority: 'high',
+    timestamp: Date.now() - 12 * 60 * 60 * 1000, // 12 hours ago
+    size: 'small'
   },
   {
     id: 'insight-3',
-    title: 'Customer Retention Opportunity',
-    description: 'Implementing a simple onboarding email sequence could improve retention by up to 25% based on your user behavior data.',
+    title: 'Investor Pitch Optimization',
+    description: 'Based on successful pitch decks in your industry, consider highlighting your customer acquisition cost metrics more prominently.',
+    type: 'recommendation',
     priority: 'medium',
-    category: 'product',
-    icon: <RiLightbulbLine className="w-5 h-5 text-success-500" />
+    timestamp: Date.now() - 36 * 60 * 60 * 1000, // 36 hours ago
+    size: 'small'
+  },
+  {
+    id: 'insight-4',
+    title: 'Market Opportunity',
+    description: 'Recent industry shifts indicate a growing demand for enterprise solutions in your sector. Consider exploring this segment for expansion.',
+    type: 'prediction',
+    priority: 'medium',
+    timestamp: Date.now() - 48 * 60 * 60 * 1000, // 2 days ago
+    size: 'large'
+  },
+  {
+    id: 'insight-5',
+    title: 'Team Productivity',
+    description: 'Your development velocity has increased by 23% since implementing agile practices. Continue refining your sprint planning process.',
+    type: 'trend',
+    priority: 'low',
+    timestamp: Date.now() - 72 * 60 * 60 * 1000, // 3 days ago
+    size: 'small'
   }
 ];
 
@@ -263,7 +287,15 @@ const METRIC_CATEGORIES = [
 ];
 
 export default function DashboardPage() {
-  const { pinnedMetrics, addPinnedMetric, removePinnedMetric, insightStates, updateInsightState } = useUIStore();
+  const { 
+    pinnedMetrics, 
+    addPinnedMetric, 
+    removePinnedMetric, 
+    insightStates, 
+    updateInsightState,
+    focusMode,
+    setFocusMode
+  } = useUIStore();
   const [dateRange, setDateRange] = useState('monthly');
   const [activeMetricCategory, setActiveMetricCategory] = useState('finance');
   
@@ -287,11 +319,29 @@ export default function DashboardPage() {
     updateInsightState(id, state);
   };
 
+  // Handle focus mode section visibility
+  const handleFocusModeChange = (selectedSections: string[]) => {
+    setFocusMode({
+      ...focusMode,
+      sections: selectedSections
+    });
+  };
+
+  // Check if a section should be visible based on focus mode settings
+  const isSectionVisible = (sectionId: string) => {
+    if (!focusMode.enabled) return true;
+    return focusMode.sections.includes(sectionId);
+  };
+
   // Dashboard content that will be passed to the layout
   const dashboardContent = (
     <>
-      {/* Welcome Section */}
+      {/* Welcome Section with Focus Mode */}
       <section className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-display font-bold text-neutral-900 dark:text-white">Dashboard</h1>
+          <FocusMode onApply={handleFocusModeChange} />
+        </div>
         <WelcomeSection 
           userName="Kuria" 
           lastLoginDate={lastLoginDate}
@@ -313,6 +363,95 @@ export default function DashboardPage() {
           }}
         />
       </section>
+
+      {/* Startup Health Section */}
+      {isSectionVisible('metrics') && (
+        <section className="mb-6">
+          <StartupHealth 
+            overallScore={mockHealthData.overallScore}
+            previousScore={mockHealthData.previousScore}
+            dimensions={mockHealthData.dimensions}
+            historyData={mockHealthData.historyData}
+          />
+        </section>
+      )}
+      
+      {/* AI Insights Section */}
+      {isSectionVisible('insights') && (
+        <section className="mb-6">
+          <h2 className="text-xl font-display font-semibold text-neutral-900 dark:text-white mb-4">AI Insights</h2>
+          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-4 border border-neutral-200 dark:border-neutral-700">
+            <BentoGrid insights={aiInsights} />
+          </div>
+        </section>
+      )}
+      
+      {/* Funding Section - Conditionally Rendered */}
+      {isSectionVisible('funding') && (
+        <section className="mb-6">
+          <h2 className="text-xl font-display font-semibold text-neutral-900 dark:text-white mb-4">
+            Funding & Pitch Optimization
+          </h2>
+          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-4 border border-neutral-200 dark:border-neutral-700">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-neutral-900 dark:text-white">Fundraising Progress</h3>
+              <button className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center">
+                <span>View details</span>
+                <RiArrowRightLine className="ml-1 w-4 h-4" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Target</h4>
+                    <RiMoneyDollarCircleLine className="w-5 h-5 text-emerald-500" />
+                  </div>
+                  <div className="text-2xl font-bold text-neutral-900 dark:text-white">$2.5M</div>
+                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Seed Round</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Committed</h4>
+                    <RiMoneyDollarCircleLine className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div className="text-2xl font-bold text-neutral-900 dark:text-white">$1.8M</div>
+                  <div className="text-sm text-neutral-500 dark:text-neutral-400">72% of target</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Investor Meetings</h4>
+                    <RiTeamLine className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div className="text-2xl font-bold text-neutral-900 dark:text-white">12</div>
+                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Next: Mar 15</div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold inline-block text-primary-600">
+                    Fundraising Progress
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-semibold inline-block text-primary-600">
+                    72%
+                  </span>
+                </div>
+              </div>
+              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-primary-200">
+                <div style={{ width: "72%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-600"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
       
       {/* Pinned Metrics */}
       <section className="mb-6">
@@ -460,10 +599,12 @@ export default function DashboardPage() {
   
             
       {/* Co-Founder Hub - Full Width */}
-      <section className="mb-6">
-        <h2 className="text-xl font-display font-semibold text-neutral-900 dark:text-white mb-4">Intelligent Co-Founder Hub</h2>
-        <CoFounderHub />
-      </section>
+      {isSectionVisible('cofounder') && (
+        <section className="mb-6">
+          <h2 className="text-xl font-display font-semibold text-neutral-900 dark:text-white mb-4">Intelligent Co-Founder Hub</h2>
+          <CoFounderHub />
+        </section>
+      )}
       
 
       
@@ -696,40 +837,46 @@ export default function DashboardPage() {
       </section>
       
       {/* Activity Stream and Milestone Tracker - Two Columns */}
-      <section className="mb-6">
-        <h2 className="text-xl font-display font-semibold text-neutral-900 dark:text-white mb-4">
-          Execution & Operations
-        </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recent Activity Column */}
-          <div>
-            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-4 border border-neutral-200 dark:border-neutral-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-neutral-900 dark:text-white">Recent Activity</h3>
-                <button className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center">
-                  <span>View all</span>
-                  <RiArrowRightLine className="ml-1 w-4 h-4" />
-                </button>
+      {(isSectionVisible('activity') || isSectionVisible('milestones')) && (
+        <section className="mb-6">
+          <h2 className="text-xl font-display font-semibold text-neutral-900 dark:text-white mb-4">
+            Execution & Operations
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recent Activity Column */}
+            {isSectionVisible('activity') && (
+              <div>
+                <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-4 border border-neutral-200 dark:border-neutral-700">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-medium text-neutral-900 dark:text-white">Recent Activity</h3>
+                    <button className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center">
+                      <span>View all</span>
+                      <RiArrowRightLine className="ml-1 w-4 h-4" />
+                    </button>
+                  </div>
+                  <ActivityStream 
+                    limit={4} 
+                    showComments={false} 
+                    compact={true}
+                  />
+                </div>
               </div>
-              <ActivityStream 
-                limit={4} 
-                showComments={false} 
-                compact={true}
-              />
-            </div>
+            )}
+            
+            {/* Milestone Tracker Column */}
+            {isSectionVisible('milestones') && (
+              <div>
+                <MilestoneTracker 
+                  milestones={mockMilestones}
+                  onAddMilestone={() => console.log('Add milestone clicked')}
+                  onViewAllMilestones={() => console.log('View all milestones clicked')}
+                  onMilestoneClick={(milestone) => console.log('Milestone clicked:', milestone)}
+                />
+              </div>
+            )}
           </div>
-          
-          {/* Milestone Tracker Column */}
-          <div>
-            <MilestoneTracker 
-              milestones={mockMilestones}
-              onAddMilestone={() => console.log('Add milestone clicked')}
-              onViewAllMilestones={() => console.log('View all milestones clicked')}
-              onMilestoneClick={(milestone) => console.log('Milestone clicked:', milestone)}
-            />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 

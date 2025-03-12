@@ -145,22 +145,22 @@ export default function CoFounderHub({
 
   const renderOverviewTab = () => (
     <div className="p-4">
-      <h3 className="text-lg font-medium text-neutral-900 mb-4">Intelligent Co-Founder Hub</h3>
+      <h3 className="text-lg font-medium text-neutral-900 dark:text-white mb-4">Intelligent Co-Founder Hub</h3>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         {coFounders.map(coFounder => (
           <button
             key={coFounder.id}
-            className={`flex items-start p-4 rounded-xl ${coFounder.lightColor} ${coFounder.borderColor} border transition-all hover:shadow-md`}
+            className={`flex items-start p-4 rounded-xl ${coFounder.lightColor} ${coFounder.borderColor} border transition-all hover:shadow-md dark:bg-opacity-10 dark:border-opacity-20`}
             onClick={() => setActiveTab(coFounder.id)}
           >
             <div className={`w-10 h-10 rounded-full ${coFounder.color} flex items-center justify-center text-white mr-3 flex-shrink-0`}>
               {coFounder.icon}
             </div>
             <div className="text-left">
-              <h4 className="font-medium text-neutral-900">{coFounder.title}</h4>
-              <p className="text-sm text-neutral-600 mb-2">{coFounder.description}</p>
-              <div className="flex items-center text-xs text-primary-600">
+              <h4 className="font-medium text-neutral-900 dark:text-white">{coFounder.title}</h4>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">{coFounder.description}</p>
+              <div className="flex items-center text-xs text-primary-600 dark:text-primary-400">
                 <span>View capabilities</span>
                 <RiArrowRightSLine className="ml-1" />
               </div>
@@ -169,13 +169,13 @@ export default function CoFounderHub({
         ))}
       </div>
       
-      <div className="bg-neutral-50 rounded-xl p-4 border border-neutral-200">
+      <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-4 border border-neutral-200 dark:border-neutral-700">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
-            <RiLightbulbLine className="text-primary-600 w-5 h-5 mr-2" />
-            <h4 className="font-medium text-neutral-900">Recent AI Insights</h4>
+            <RiLightbulbLine className="text-primary-600 dark:text-primary-400 w-5 h-5 mr-2" />
+            <h4 className="font-medium text-neutral-900 dark:text-white">Recent AI Insights</h4>
           </div>
-          <button className="text-xs text-primary-600 flex items-center">
+          <button className="text-xs text-primary-600 dark:text-primary-400 flex items-center">
             <span>View all insights</span>
             <RiArrowRightLine className="ml-1 w-3 h-3" />
           </button>
@@ -183,18 +183,18 @@ export default function CoFounderHub({
         
         <div className="space-y-3">
           {coFounders.flatMap(cf => cf.insights.slice(0, 1).map((insight, idx) => (
-            <div key={`${cf.id}-${idx}`} className="flex items-start p-3 bg-white rounded-lg border border-neutral-100 hover:shadow-sm transition-shadow">
+            <div key={`${cf.id}-${idx}`} className="flex items-start p-3 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-100 dark:border-neutral-700 hover:shadow-sm transition-shadow">
               <div className={`w-8 h-8 rounded-full ${cf.color} flex items-center justify-center text-white mr-2 flex-shrink-0`}>
                 {cf.icon}
               </div>
               <div className="flex-1">
-                <p className="text-sm text-neutral-700">{insight}</p>
+                <p className="text-sm text-neutral-700 dark:text-neutral-300">{insight}</p>
                 <div className="flex items-center mt-1">
-                  <span className="text-xs text-primary-600 mr-3 cursor-pointer hover:underline flex items-center">
+                  <span className="text-xs text-primary-600 dark:text-primary-400 mr-3 cursor-pointer hover:underline flex items-center">
                     <span>Take action</span>
                     <RiArrowRightLine className="ml-1 w-3 h-3" />
                   </span>
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
                     From {cf.title}
                   </span>
                 </div>
@@ -213,39 +213,39 @@ export default function CoFounderHub({
           {coFounder.icon}
         </div>
         <div>
-          <h3 className="font-medium text-neutral-900">{coFounder.title}</h3>
-          <p className="text-sm text-neutral-600">{coFounder.description}</p>
+          <h3 className="font-medium text-neutral-900 dark:text-white">{coFounder.title}</h3>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">{coFounder.description}</p>
         </div>
       </div>
       
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-neutral-700 mb-2">Capabilities</h4>
+        <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Capabilities</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {coFounder.capabilities.map((capability: string, idx: number) => (
             <div 
               key={idx} 
-              className="flex items-center p-2 rounded-lg hover:bg-neutral-50 cursor-pointer"
+              className="flex items-center p-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 cursor-pointer"
             >
-              <RiArrowRightSLine className="text-primary-600 mr-2 flex-shrink-0" />
-              <span className="text-sm">{capability}</span>
+              <RiArrowRightSLine className="text-primary-600 dark:text-primary-400 mr-2 flex-shrink-0" />
+              <span className="text-sm dark:text-neutral-300">{capability}</span>
             </div>
           ))}
         </div>
       </div>
       
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-neutral-700 mb-2">Recent Insights</h4>
+        <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Recent Insights</h4>
         <div className="space-y-3">
           {coFounder.insights.map((insight: string, idx: number) => (
             <div 
               key={idx} 
-              className="p-3 bg-neutral-50 rounded-lg border border-neutral-200 hover:shadow-sm transition-shadow"
+              className="p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:shadow-sm transition-shadow"
             >
               <div className="flex items-start">
-                <RiLightbulbLine className="text-primary-600 w-4 h-4 mt-0.5 mr-2 flex-shrink-0" />
+                <RiLightbulbLine className="text-primary-600 dark:text-primary-400 w-4 h-4 mt-0.5 mr-2 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm">{insight}</p>
-                  <button className="text-xs text-primary-600 mt-2 flex items-center">
+                  <p className="text-sm dark:text-neutral-300">{insight}</p>
+                  <button className="text-xs text-primary-600 dark:text-primary-400 mt-2 flex items-center">
                     <span>Take action</span>
                     <RiArrowRightLine className="ml-1 w-3 h-3" />
                   </button>
@@ -264,11 +264,11 @@ export default function CoFounderHub({
   );
 
   return (
-    <div className={`bg-white rounded-xl border border-neutral-200 overflow-hidden ${className}`}>
+    <div className={`bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden ${className}`}>
       {/* Header with tabs */}
-      <div className="border-b border-neutral-200">
+      <div className="border-b border-neutral-200 dark:border-neutral-700">
         <div className="flex items-center px-4 py-3 justify-between">
-          <h3 className="font-medium text-neutral-900">Intelligent Co-Founder Hub</h3>
+          <h3 className="font-medium text-neutral-900 dark:text-white">Intelligent Co-Founder Hub</h3>
           <div className="flex items-center">
             <div className="relative mr-2">
               <input
@@ -276,13 +276,13 @@ export default function CoFounderHub({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search capabilities..."
-                className="pl-8 pr-2 py-1 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+                className="pl-8 pr-2 py-1 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
               />
               <RiSearchLine className="absolute left-2 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
                 >
                   <RiCloseLine className="w-4 h-4" />
                 </button>
@@ -290,7 +290,7 @@ export default function CoFounderHub({
             </div>
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
-              className="btn btn-sm btn-ghost"
+              className="btn btn-sm btn-ghost dark:text-neutral-300"
             >
               {isExpanded ? 'Collapse' : 'Expand'}
             </button>
@@ -301,8 +301,8 @@ export default function CoFounderHub({
           <button
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap ${
               activeTab === 'Overview' 
-                ? 'text-primary-600 border-b-2 border-primary-600' 
-                : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
+                ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400' 
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-700'
             }`}
             onClick={() => setActiveTab('Overview')}
           >
@@ -314,8 +314,8 @@ export default function CoFounderHub({
               key={coFounder.id}
               className={`px-4 py-2 text-sm font-medium whitespace-nowrap ${
                 activeTab === coFounder.id 
-                  ? 'text-primary-600 border-b-2 border-primary-600' 
-                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
+                  ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400' 
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-700'
               }`}
               onClick={() => setActiveTab(coFounder.id)}
             >

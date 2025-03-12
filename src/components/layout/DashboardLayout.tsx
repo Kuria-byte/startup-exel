@@ -50,12 +50,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="mb-6">
                   {children}
                 </div>
-                
-                {/* AI Insights Bento Grid */}
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">AI Insights</h2>
-                  <BentoGrid insights={aiInsights} />
-                </div>
+         
                 
                 </div>
             </div>

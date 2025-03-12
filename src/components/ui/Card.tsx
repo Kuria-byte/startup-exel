@@ -11,7 +11,7 @@ interface CardProps {
 export default function Card({ children, className = '', interactive = false }: CardProps) {
   return (
     <div 
-      className={`card ${interactive ? 'card-hover' : ''} ${className}`}
+      className={`card bg-white dark:bg-neutral-800 rounded-lg shadow-sm ${interactive ? 'card-hover transition-transform hover:shadow-md hover:-translate-y-1' : ''} ${className}`}
     >
       {children}
     </div>
@@ -26,12 +26,12 @@ interface CardHeaderProps {
 
 export function CardHeader({ title, subtitle, action }: CardHeaderProps) {
   return (
-    <div className="flex items-center justify-between p-5 border-b border-neutral-200">
+    <div className="flex items-center justify-between p-5 border-b border-neutral-200 dark:border-neutral-700">
       <div>
-        <h3 className="text-base font-medium text-neutral-900">{title}</h3>
+        <h3 className="text-base font-medium text-neutral-900 dark:text-white">{title}</h3>
         {subtitle && (
           typeof subtitle === 'string' 
-            ? <p className="text-sm text-neutral-500 mt-0.5">{subtitle}</p>
+            ? <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">{subtitle}</p>
             : subtitle
         )}
       </div>
@@ -46,7 +46,7 @@ export function CardContent({ children, className = '' }: { children: React.Reac
 
 export function CardFooter({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`p-4 bg-neutral-50 border-t border-neutral-200 ${className}`}>
+    <div className={`p-4 bg-neutral-50 dark:bg-neutral-850 border-t border-neutral-200 dark:border-neutral-700 ${className}`}>
       {children}
     </div>
   );

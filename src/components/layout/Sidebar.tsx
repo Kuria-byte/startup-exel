@@ -146,6 +146,7 @@ export default function Sidebar() {
   
   const pathname = usePathname();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   
   // Navigation categories state
   const [navigationCategories, setNavigationCategories] = useState<Record<string, NavigationCategoryState>>({
@@ -195,8 +196,10 @@ export default function Sidebar() {
             ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' 
             : 'text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800'
           }
-          ${sidebarCollapsed ? 'justify-center' : ''}
+          ${sidebarCollapsed ? 'justify-center relative' : ''}
         `}
+        onMouseEnter={() => sidebarCollapsed && setHoveredItem(item.id)}
+        onMouseLeave={() => sidebarCollapsed && setHoveredItem(null)}
       >
         <span className="flex-shrink-0">
           {item.icon}
@@ -217,30 +220,75 @@ export default function Sidebar() {
         {sidebarCollapsed && item.badge && (
           <span className={`absolute top-0 right-0 w-2 h-2 rounded-full ${item.badge.color}`}></span>
         )}
+        
+        {/* Compact label tooltip on hover when sidebar is collapsed */}
+        {sidebarCollapsed && hoveredItem === item.id && (
+          <div 
+            className="absolute left-full ml-2 px-2 py-1 bg-neutral-800 dark:bg-neutral-700 text-white text-xs rounded z-50 whitespace-nowrap"
+            style={{ 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+              animation: 'fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          >
+            <div 
+              className="absolute left-0 top-1/2 w-2 h-2 bg-neutral-800 dark:bg-neutral-700 transform -translate-x-1/2 rotate-45 -translate-y-1/2"
+              style={{ marginLeft: '1px' }}
+            ></div>
+            <span>{item.name}</span>
+            {item.badge && (
+              <span className={`ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full text-xs text-white ${item.badge.color}`}>
+                {item.badge.count}
+              </span>
+            )}
+          </div>
+        )}
       </Link>
     );
+  };
+  
+  // Check if any item in the category is active
+  const isCategoryActive = (items: NavItem[]) => {
+    return items.some(item => pathname === item.path || pathname.startsWith(`${item.path}/`));
   };
   
   // Render a category with its items
   const renderCategory = (categoryId: string, categoryName: string, items: NavItem[]) => {
     const isExpanded = navigationCategories[categoryId]?.expanded;
+    const isActive = isCategoryActive(items);
     
     return (
       <div 
         key={categoryId}
-        className="relative"
+        className={`
+          relative group
+          ${isActive ? 'category-active' : ''}
+        `}
         onMouseEnter={() => sidebarCollapsed && setHoveredCategory(categoryId)}
         onMouseLeave={() => sidebarCollapsed && setHoveredCategory(null)}
       >
         {/* Category header */}
         {!sidebarCollapsed && (
           <div 
-            className="flex items-center justify-between px-4 py-2 cursor-pointer text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
+            className={`
+              flex items-center justify-between px-4 py-2 cursor-pointer
+              transition-all duration-200 ease-in-out
+              ${isActive 
+                ? 'text-primary-700 dark:text-primary-400 font-medium' 
+                : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+              }
+              ${isActive ? 'border-l-2 border-primary-500 pl-3.5' : 'border-l-2 border-transparent pl-3.5'}
+              group-hover:bg-neutral-50 dark:group-hover:bg-neutral-800/50 rounded-lg
+            `}
             onClick={() => toggleCategory(categoryId)}
           >
             <span className="text-xs font-semibold uppercase tracking-wider">{categoryName}</span>
-            <span className="transform transition-transform duration-200">
-              {isExpanded ? <RiArrowDownSLine className="w-4 h-4" /> : <RiArrowRightSLine className="w-4 h-4" />}
+            <span className={`
+              transform transition-transform duration-200 ease-in-out
+              ${isExpanded ? 'rotate-180' : 'rotate-0'}
+            `}>
+              <RiArrowDownSLine className="w-4 h-4" />
             </span>
           </div>
         )}
@@ -250,13 +298,20 @@ export default function Sidebar() {
           <div 
             className={`
               space-y-1 overflow-hidden transition-all duration-300 ease-in-out
-              ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
+              ${isExpanded ? 'max-h-96 opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-2'}
             `}
+            style={{
+              transitionProperty: 'max-height, opacity, transform',
+              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
           >
             {items.map(renderNavItem)}
           </div>
         ) : (
-          <div className="flex justify-center py-2">
+          <div className={`
+            flex justify-center py-2 transition-all duration-200 ease-in-out
+            ${isActive ? 'border-l-2 border-primary-500' : 'border-l-2 border-transparent'}
+          `}>
             {items.length > 0 && renderNavItem(items[0])}
           </div>
         )}
@@ -265,7 +320,10 @@ export default function Sidebar() {
         {sidebarCollapsed && hoveredCategory === categoryId && (
           <div 
             className="absolute left-full top-0 ml-2 w-48 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 py-2 z-50"
-            style={{ marginTop: '-0.5rem' }}
+            style={{ 
+              marginTop: '-0.5rem',
+              animation: 'fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
           >
             <div className="px-4 py-1 mb-1 border-b border-neutral-200 dark:border-neutral-700">
               <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
@@ -279,6 +337,7 @@ export default function Sidebar() {
                   key={item.id}
                   className={`
                     flex items-center px-3 py-2 rounded-md text-sm
+                    transition-all duration-200 ease-in-out
                     ${pathname === item.path 
                       ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' 
                       : 'text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800'
@@ -312,18 +371,25 @@ export default function Sidebar() {
         transition-all duration-300 ease-in-out
         ${sidebarCollapsed ? 'w-16' : 'w-64'}
       `}
+      style={{
+        transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
     >
       {/* Sidebar header */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex items-center">
           <div className="flex-shrink-0">
-            <div className={`w-8 h-8 rounded-md bg-primary-600 flex items-center justify-center text-white font-bold ${!sidebarCollapsed ? 'mr-3' : ''}`}>
+            <div className={`
+              w-8 h-8 rounded-md bg-primary-600 flex items-center justify-center text-white font-bold
+              transition-all duration-300 ease-in-out
+              ${!sidebarCollapsed ? 'mr-3' : ''}
+            `}>
               SE
             </div>
           </div>
           
           {!sidebarCollapsed && (
-            <span className="text-lg font-semibold text-neutral-900 dark:text-white">
+            <span className="text-lg font-semibold text-neutral-900 dark:text-white transition-opacity duration-200 ease-in-out">
               StartupExel
             </span>
           )}
@@ -334,9 +400,9 @@ export default function Sidebar() {
           className="w-8 h-8 flex items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800 transition-colors"
         >
           {sidebarCollapsed ? (
-            <RiArrowRightSLine className="w-5 h-5" />
+            <RiArrowRightSLine className="w-5 h-5 transition-transform duration-200 ease-in-out" />
           ) : (
-            <RiArrowLeftSLine className="w-5 h-5" />
+            <RiArrowLeftSLine className="w-5 h-5 transition-transform duration-200 ease-in-out" />
           )}
         </button>
       </div>
@@ -348,32 +414,32 @@ export default function Sidebar() {
         )}
       </nav>
       
-      {/* Recently viewed */}
-      {!sidebarCollapsed && recentlyViewed.length > 0 && (
-        <div className="px-4 py-3 border-t border-neutral-200 dark:border-neutral-800">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
-            Recently Viewed
-          </h3>
-          
-          <div className="space-y-1">
-            {recentlyViewed.slice(0, 3).map(item => (
-              <Link 
-                href={item.path || '#'} 
-                key={item.path || `recent-${item.title}`}
-                className="flex items-center px-3 py-1.5 rounded-md text-sm text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-              >
-                <RiTimeLine className="w-4 h-4 mr-2 text-neutral-500 dark:text-neutral-400" />
-                <span className="truncate">{item.title}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* AI Assistant
+      <div className="mt-auto">
+        <AIAssistant collapsed={sidebarCollapsed} />
+      </div> */}
       
-      {/* AI Assistant */}
-      <div className={`p-4 border-t border-neutral-200 dark:border-neutral-800 ${sidebarCollapsed ? 'hidden' : ''}`}>
-        <AIAssistant compact={true} />
-      </div>
+      {/* Add keyframe animations */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { 
+            opacity: 0; 
+            transform: translateX(-8px); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateX(0); 
+          }
+        }
+        
+        .sidebar {
+          will-change: width;
+        }
+        
+        .sidebar * {
+          will-change: transform, opacity;
+        }
+      `}</style>
     </aside>
   );
 }
