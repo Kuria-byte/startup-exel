@@ -1,7 +1,7 @@
 # StartupExel 🚀
 
 <div align="center">
-  <img src="[https://github.com/user-attachments/assets/791243a5-a255-4632-9581-e1482a7e12b4)]" alt="StartupExel Banner" />
+  <img src="https://github.com/user-attachments/assets/791243a5-a255-4632-9581-e1482a7e12b4" alt="StartupExel Banner" />
   
   
   [![License](https://img.shields.io/badge/License-Proprietary-blue.svg)](LICENSE)
@@ -38,7 +38,7 @@
 StartupExel is a comprehensive platform designed to guide entrepreneurs through every stage of the startup journey, from initial ideation to sustainable growth. Our mission is to democratize entrepreneurship by providing AI-powered tools that level the playing field, enabling founders to compete effectively regardless of their background or connections.
 
 <div align="center">
-  <img src="[https://github.com/user-attachments/assets/791243a5-a255-4632-9581-e1482a7e12b4]" alt="StartupExel Dashboard" width="80%" />
+  <img src="https://github.com/user-attachments/assets/791243a5-a255-4632-9581-e1482a7e12b4" alt="StartupExel Dashboard" width="80%" />
 </div>
 
 ### Why StartupExel? 🤔
