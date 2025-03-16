@@ -37,9 +37,7 @@
 
 StartupExel is a comprehensive platform designed to guide entrepreneurs through every stage of the startup journey, from initial ideation to sustainable growth. Our mission is to democratize entrepreneurship by providing AI-powered tools that level the playing field, enabling founders to compete effectively regardless of their background or connections.
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/791243a5-a255-4632-9581-e1482a7e12b4" alt="StartupExel Dashboard" width="80%" />
-</div>
+
 
 ### Why StartupExel? 🤔
 
@@ -58,9 +56,7 @@ StartupExel addresses these challenges by providing AI co-founders that offer do
 
 Comprehensive tools for business model development, market research, competitive analysis, and strategic planning.
 
-<div align="center">
-  <img src="https://via.placeholder.com/800x400?text=Business+Planning+Suite" alt="Business Planning Suite" width="80%" />
-</div>
+
 
 ```typescript
 // Example: Business model validation algorithm
@@ -108,9 +104,6 @@ const validateBusinessModel = async (
 
 Transform business requirements into functional prototypes without technical co-founders.
 
-<div align="center">
-  <img src="https://via.placeholder.com/800x400?text=AI-CTO+Interface" alt="AI-CTO Interface" width="80%" />
-</div>
 
 **Key Capabilities:**
 - 📋 Requirements analysis and refinement
@@ -185,9 +178,7 @@ Create necessary legal documents and ensure compliance across jurisdictions.
 
 Prepare for fundraising and track investor relationships.
 
-<div align="center">
-  <img src="https://via.placeholder.com/800x400?text=Funding+Preparation+Tools" alt="Funding Tools" width="80%" />
-</div>
+
 
 ### 📊 Growth Analytics
 
@@ -878,7 +869,7 @@ For support, please contact:
   <p>Built with ❤️ by Ian Kuria (www.kuria.pro) - Software Engineer -  the Exel Team</p>
   <p>
     <a href="https://twitter.com/exelhq">Twitter</a> •
-    <a href="https://linkedin.com/company/exelhq">LinkedIn</a> •
-    <a href="https://exel.com">Website</a>
+    <a href="https://linkedin.com/ianmwitumi">LinkedIn</a> •
+    <a href="https://kuria.pro">Website</a>
   </p>
 </div>
