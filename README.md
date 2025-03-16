@@ -1,7 +1,8 @@
 # StartupExel 🚀
 
 <div align="center">
-  <img src="https://via.placeholder.com/1200x300?text=StartupExel:+AI-Powered+Startup+Journey" alt="StartupExel Banner" />
+  <img src="[https://via.placeholder.com/1200x300?text=StartupExel:+AI-Powered+Startup+Journey](https://github.com/user-attachments/assets/791243a5-a255-4632-9581-e1482a7e12b4)" alt="StartupExel Banner" />
+  
   
   [![License](https://img.shields.io/badge/License-Proprietary-blue.svg)](LICENSE)
   [![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)](VERSION)
@@ -12,6 +13,7 @@
   
   <h3>AI-powered co-founders transforming visionary ideas into thriving, data-driven startup ventures</h3>
 </div>
+
 
 ## 📋 Table of Contents
 
